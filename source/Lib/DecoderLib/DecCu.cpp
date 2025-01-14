@@ -233,11 +233,11 @@ void DecCu::xIntraRecBlk( TransformUnit& tu, const ComponentID compID )
         if (firstTBInPredReg)
         {
           PelBuf piPredReg = cs.getPredBuf(areaPredReg);
-          m_pcIntraPred->predIntraAng(compID, piPredReg, pu);
+          m_pcIntraPred->predIntraAng(compID, piPredReg, pu, false);
         }
       }
       else
-        m_pcIntraPred->predIntraAng(compID, piPred, pu);
+        m_pcIntraPred->predIntraAng(compID, piPred, pu, false);
     }
   }
   const Slice           &slice = *cs.slice;
@@ -370,7 +370,7 @@ void DecCu::xIntraRecACTBlk(TransformUnit& tu)
     }
     else
     {
-      m_pcIntraPred->predIntraAng(compID, piPred, pu);
+      m_pcIntraPred->predIntraAng(compID, piPred, pu, false);
     }
 
     PelBuf piResi = cs.getResiBuf(area);
@@ -645,7 +645,7 @@ void DecCu::xReconInter(CodingUnit &cu)
   }
   else
   {
-  m_pcIntraPred->geneIntrainterPred(cu);
+  m_pcIntraPred->geneIntrainterPred(cu, false);
 
   // inter prediction
   CHECK(CU::isIBC(cu) && cu.firstPU->ciipFlag, "IBC and Ciip cannot be used together");

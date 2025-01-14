@@ -214,7 +214,7 @@ void IntraPrediction::setReferenceArrayLengths( const CompArea &area )
 
 }
 
-void IntraPrediction::predIntraAng( const ComponentID compId, PelBuf &piPred, const PredictionUnit &pu)
+void IntraPrediction::predIntraAng( const ComponentID compId, PelBuf &piPred, const PredictionUnit &pu, bool isEnc)
 {
   const ComponentID    compID       = MAP_CHROMA( compId );
   const ChannelType    channelType  = toChannelType( compID );
@@ -238,7 +238,7 @@ void IntraPrediction::predIntraAng( const ComponentID compId, PelBuf &piPred, co
     case(PLANAR_IDX): xPredIntraPlanar(srcBuf, piPred); break;
     case(DC_IDX):     xPredIntraDc(srcBuf, piPred, channelType, false); break;
     case(BDPCM_IDX):  xPredIntraBDPCM(srcBuf, piPred, isLuma(compID) ? pu.cu->bdpcmMode : pu.cu->bdpcmModeChroma, clpRng); break;
-    default:          xPredIntraAng(srcBuf, piPred, channelType, clpRng); break;
+    default:          xPredIntraAng(srcBuf, piPred, channelType, clpRng, isEnc); break;
   }
 
   if (m_ipaParam.applyPDPC)
@@ -456,7 +456,7 @@ void IntraPrediction::initPredIntraParams(const PredictionUnit & pu, const CompA
 */
 //NOTE: Bit-Limit - 25-bit source
 
-void IntraPrediction::xPredIntraAng( const CPelBuf &pSrc, PelBuf &pDst, const ChannelType channelType, const ClpRng& clpRng)
+void IntraPrediction::xPredIntraAng( const CPelBuf &pSrc, PelBuf &pDst, const ChannelType channelType, const ClpRng& clpRng, bool isEnc)
 {
   int width =int(pDst.width);
   int height=int(pDst.height);
@@ -733,7 +733,7 @@ void IntraPrediction::switchBuffer(const PredictionUnit &pu, ComponentID compID,
   }
 }
 
-void IntraPrediction::geneIntrainterPred(const CodingUnit &cu)
+void IntraPrediction::geneIntrainterPred(const CodingUnit &cu, bool isEnc)
 {
   if (!cu.firstPU->ciipFlag)
   {
@@ -743,7 +743,7 @@ void IntraPrediction::geneIntrainterPred(const CodingUnit &cu)
   const PredictionUnit* pu = cu.firstPU;
 
   initIntraPatternChType(cu, pu->Y());
-  predIntraAng(COMPONENT_Y, cu.cs->getPredBuf(*pu).Y(), *pu);
+  predIntraAng(COMPONENT_Y, cu.cs->getPredBuf(*pu).Y(), *pu, isEnc);
   int maxCompID = 1;
   if (isChromaEnabled(pu->chromaFormat))
   {
@@ -751,10 +751,10 @@ void IntraPrediction::geneIntrainterPred(const CodingUnit &cu)
   if (pu->chromaSize().width > 2)
   {
     initIntraPatternChType(cu, pu->Cb());
-    predIntraAng(COMPONENT_Cb, cu.cs->getPredBuf(*pu).Cb(), *pu);
+    predIntraAng(COMPONENT_Cb, cu.cs->getPredBuf(*pu).Cb(), *pu, isEnc);
 
     initIntraPatternChType(cu, pu->Cr());
-    predIntraAng(COMPONENT_Cr, cu.cs->getPredBuf(*pu).Cr(), *pu);
+    predIntraAng(COMPONENT_Cr, cu.cs->getPredBuf(*pu).Cr(), *pu, isEnc);
   }
   }
   for (int currCompID = 0; currCompID < maxCompID; currCompID++)

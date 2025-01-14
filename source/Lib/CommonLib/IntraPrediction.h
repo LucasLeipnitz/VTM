@@ -120,7 +120,7 @@ protected:
   // prediction
   void xPredIntraPlanar           ( const CPelBuf &pSrc, PelBuf &pDst );
   void xPredIntraDc               ( const CPelBuf &pSrc, PelBuf &pDst, const ChannelType channelType, const bool enableBoundaryFilter = true );
-  void xPredIntraAng              ( const CPelBuf &pSrc, PelBuf &pDst, const ChannelType channelType, const ClpRng& clpRng);
+  void xPredIntraAng              ( const CPelBuf &pSrc, PelBuf &pDst, const ChannelType channelType, const ClpRng& clpRng, bool isEnc);
 
   void initPredIntraParams        ( const PredictionUnit & pu,  const CompArea compArea, const SPS& sps );
 
@@ -147,7 +147,7 @@ public:
   void init                       (ChromaFormat chromaFormatIDC, const unsigned bitDepthY);
 
   // Angular Intra
-  void predIntraAng               ( const ComponentID compId, PelBuf &piPred, const PredictionUnit &pu);
+  void predIntraAng               ( const ComponentID compId, PelBuf &piPred, const PredictionUnit &pu, bool isEnc);
   Pel *getPredictorPtr(const ComponentID compId)
   {
     return m_refBuffer[compId][m_ipaParam.refFilterFlag ? PRED_BUF_FILTERED : PRED_BUF_UNFILTERED];
@@ -167,7 +167,7 @@ public:
   void geneWeightedPred           (const ComponentID compId, PelBuf &pred, const PredictionUnit &pu, Pel *srcBuf);
   Pel* getPredictorPtr2           (const ComponentID compID, uint32_t idx) { return m_yuvExt2[compID][idx]; }
   void switchBuffer               (const PredictionUnit &pu, ComponentID compID, PelBuf srcBuff, Pel *dst);
-  void geneIntrainterPred         (const CodingUnit &cu);
+  void geneIntrainterPred         (const CodingUnit &cu, bool isEnc);
   void reorderPLT                 (CodingStructure& cs, Partitioner& partitioner, ComponentID compBegin, uint32_t numComp);
 };
 

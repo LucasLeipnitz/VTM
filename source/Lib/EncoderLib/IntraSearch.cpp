@@ -568,7 +568,7 @@ bool IntraSearch::estIntraPredLumaQT(CodingUnit &cu, Partitioner &partitioner, c
               pu.intraDir[0] = modeIdx;
 
               initPredIntraParams(pu, pu.Y(), sps);
-              predIntraAng(COMPONENT_Y, piPred, pu);
+              predIntraAng(COMPONENT_Y, piPred, pu, true);
               // Use the min between SAD and HAD as the cost criterion
               // SAD is scaled by 2 to align with the scaling of HAD
               minSadHad += std::min(distParamSad.distFunc(distParamSad) * 2, distParamHad.distFunc(distParamHad));
@@ -633,7 +633,7 @@ bool IntraSearch::estIntraPredLumaQT(CodingUnit &cu, Partitioner &partitioner, c
                     pu.intraDir[0] = mode;
 
                     initPredIntraParams(pu, pu.Y(), sps);
-                    predIntraAng(COMPONENT_Y, piPred, pu);
+                    predIntraAng(COMPONENT_Y, piPred, pu, true);
 
                     // Use the min between SAD and SATD as the cost criterion
                     // SAD is scaled by 2 to align with the scaling of HAD
@@ -686,7 +686,7 @@ bool IntraSearch::estIntraPredLumaQT(CodingUnit &cu, Partitioner &partitioner, c
                   pu.intraDir[0] = mode;
                   initPredIntraParams(pu, pu.Y(), sps);
 
-                  predIntraAng(COMPONENT_Y, piPred, pu);
+                  predIntraAng(COMPONENT_Y, piPred, pu, true);
 
                   // Use the min between SAD and SATD as the cost criterion
                   // SAD is scaled by 2 to align with the scaling of HAD
@@ -1361,7 +1361,7 @@ void IntraSearch::estIntraPredChromaQT( CodingUnit &cu, Partitioner &partitioner
         else
         {
           initPredIntraParams(pu, pu.Cb(), *pu.cs->sps);
-          predIntraAng(COMPONENT_Cb, predCb, pu);
+          predIntraAng(COMPONENT_Cb, predCb, pu, true);
         }
         sadCb = distParamSad.distFunc(distParamSad) * 2;
         satdCb = distParamSatd.distFunc(distParamSatd);
@@ -1380,7 +1380,7 @@ void IntraSearch::estIntraPredChromaQT( CodingUnit &cu, Partitioner &partitioner
         else
         {
           initPredIntraParams(pu, pu.Cr(), *pu.cs->sps);
-          predIntraAng(COMPONENT_Cr, predCr, pu);
+          predIntraAng(COMPONENT_Cr, predCr, pu, true);
         }
         sadCr = distParamSad.distFunc(distParamSad) * 2;
         satdCr = distParamSatd.distFunc(distParamSatd);
@@ -3062,12 +3062,12 @@ void IntraSearch::xIntraCodingTUBlock(TransformUnit &tu, const ComponentID &comp
             if (firstTBInPredReg)
             {
               PelBuf piPredReg = cs.getPredBuf(areaPredReg);
-              predIntraAng(compID, piPredReg, pu);
+              predIntraAng(compID, piPredReg, pu, true);
             }
           }
           else
           {
-            predIntraAng(compID, piPred, pu);
+            predIntraAng(compID, piPred, pu, true);
           }
         }
       }
@@ -4175,7 +4175,7 @@ bool IntraSearch::xRecurIntraCodingACTQT(CodingStructure &cs, Partitioner &parti
       }
       else
       {
-        predIntraAng(compID, piPred, pu);
+        predIntraAng(compID, piPred, pu, true);
       }
 
       piResi.copyFrom(piOrg);
@@ -4956,8 +4956,8 @@ ChromaCbfs IntraSearch::xRecurIntraChromaCodingQT( CodingStructure &cs, Partitio
     }
     else
     {
-      predIntraAng( COMPONENT_Cb, piPredCb, pu);
-      predIntraAng( COMPONENT_Cr, piPredCr, pu);
+      predIntraAng( COMPONENT_Cb, piPredCb, pu, true);
+      predIntraAng( COMPONENT_Cr, piPredCr, pu, true);
     }
 
     // determination of chroma residuals including reshaping and cross-component prediction
