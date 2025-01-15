@@ -573,7 +573,11 @@ void IntraPrediction::xPredIntraAng( const CPelBuf &pSrc, PelBuf &pDst, const Ch
           const bool useCubicFilter = !m_ipaParam.interpolationFlag;
 
           const TFilterCoeff        intraSmoothingFilter[4] = {TFilterCoeff(16 - (deltaFract >> 1)), TFilterCoeff(32 - (deltaFract >> 1)), TFilterCoeff(16 + (deltaFract >> 1)), TFilterCoeff(deltaFract >> 1)};
-          const TFilterCoeff* const f                       = (useCubicFilter) ? InterpolationFilter::getChromaFilterTable(deltaFract) : intraSmoothingFilter;
+          const TFilterCoeff *const f =
+            (isEnc) ? ((useCubicFilter) ? InterpolationFilter::getChromaCustomFilterTable(deltaFract)
+                                        : InterpolationFilter::getFGCustomFilterTable(deltaFract))
+                    : ((useCubicFilter) ? InterpolationFilter::getChromaFilterTable(deltaFract) 
+                                        : intraSmoothingFilter);
 
           for (int x = 0; x < width; x++)
           {

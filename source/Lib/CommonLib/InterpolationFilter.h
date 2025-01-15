@@ -111,6 +111,8 @@ public:
 #endif
 
   static TFilterCoeff const * const getChromaFilterTable(const int deltaFract) { return m_chromaFilter[deltaFract]; };
+  static TFilterCoeff const * const getChromaCustomFilterTable(const int deltaFract) { return m_custom_chromaFilter[deltaFract]; };
+  static TFilterCoeff const * const getFGCustomFilterTable(const int deltaFract) { return m_custom_FG[deltaFract]; };
 };
 
 //! \}
